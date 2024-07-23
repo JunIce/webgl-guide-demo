@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas width="500" height="500" id="canvas"></canvas>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const gl = canvas.getContext("webgl");
+
+      // 使用完全不透明的黑色清除所有图像
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      // 用上面指定的颜色清除缓冲区
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      let vertexShader = `
+      void main() {
+        gl_PointSize = 15.0;
+        gl_Position = vec4(0, 0.0, 0, 1.0);
+      }
+      `;
+
+      let fragmentShader = `
+      void main() {
+        gl_FragColor = vec4(1.0, .5, 0.4, 1.0);
+      }
+      `;
+
+      initShader(gl, vertexShader, fragmentShader);
+
+      gl.drawArrays(gl.POINTS, 0, 1);
+
+      function initShader(gl, vertexSource, fragmentSource) {
+        const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+        gl.shaderSource(vertexShader, vertexSource);
+        gl.shaderSource(fragmentShader, fragmentSource);
+
+        gl.compileShader(vertexShader);
+        gl.compileShader(fragmentShader);
+
+        let program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        return program;
+      }
+    </script>
+  </body>
+</html>

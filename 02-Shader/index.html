@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/gl-matrix/3.4.2/gl-matrix.js"></script>
+  </head>
+  <body>
+    <canvas width="500" height="500" id="canvas"></canvas>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const gl = canvas.getContext("webgl");
+
+      // 使用完全不透明的黑色清除所有图像
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      // 用上面指定的颜色清除缓冲区
+      gl.clear(gl.COLOR_BUFFER_BIT);
+
+      const vsSource = `
+        attribute vec4 a_position;
+        uniform mat4 u_matrix;
+        void main() {
+          // 将位置从模型空间转换到裁剪空间
+          gl_Position = a_position;
+        }
+      `;
+
+      const fsSource = `
+        precision mediump float;
+        uniform vec4 u_color;
+        void main() {
+          gl_FragColor = u_color;
+        }
+      `;
+
+      const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+      const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+      const program = createProgram(gl, vertexShader, fragmentShader);
+      gl.useProgram(program);
+      const colorLocation = gl.getUniformLocation(program, "u_color");
+      
+      gl.uniform4f(colorLocation, 1.0, 0.0, 0.0, 1.0);
+
+      const positions = [-0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5];
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(positions),
+        gl.STATIC_DRAW
+      );
+      const positionLocation = gl.getAttribLocation(program, "a_position");
+      gl.enableVertexAttribArray(positionLocation);
+
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+      // 绘制图形
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+      function createShader(gl, type, fragment) {
+        let shader = gl.createShader(type);
+        gl.shaderSource(shader, fragment);
+        gl.compileShader(shader);
+        return shader;
+      }
+
+      function createProgram(gl, vertexShader, fragmentShader) {
+        const shaderProgram = gl.createProgram();
+        gl.attachShader(shaderProgram, vertexShader);
+        gl.attachShader(shaderProgram, fragmentShader);
+        gl.linkProgram(shaderProgram);
+        return shaderProgram;
+      }
+    </script>
+  </body>
+</html>
