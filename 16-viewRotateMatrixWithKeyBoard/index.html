@@ -10,6 +10,7 @@
 </head>
 
 <body>
+  <h1>update rotation with keyboard (direction left and direction right)</h1>
   <canvas width="400" height="400" id="canvas"></canvas>
 
   <script id="vertexShader" type="x-shader/v-vertex">
@@ -70,37 +71,64 @@
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
     let a_Position = gl.getAttribLocation(gl.program, "a_Position");
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false,
-      FSIZE * 9, 0
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false,
+      FSIZE * 6, 0
     )
     gl.enableVertexAttribArray(a_Position);
 
     let a_Color = gl.getAttribLocation(gl.program, "a_Color");
-    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 9, FSIZE * 3)
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3)
     gl.enableVertexAttribArray(a_Color);
 
 
 
+    let eyeMat3 = [0.25, 0.25, 0.25]
+
+    let deg = 0
 
     function draw() {
 
       let u_ViewMatrix = gl.getUniformLocation(gl.program, 'u_ViewMatrix');
       let viewMatrix = glMatrix.mat4.create();
-      viewMatrix = glMatrix.mat4.lookAt(viewMatrix, [0.25, 0.25, 0.25], [0, 0, 0], [0, 1, 0]);
+      viewMatrix = glMatrix.mat4.lookAt(viewMatrix, eyeMat3, [0, 0, 0], [0, 1, 0]);
       gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix);
 
       let u_ModelMatrix = gl.getUniformLocation(gl.program, 'u_ModelMatrix');
       let modelMatrix = glMatrix.mat4.create();
       let rotateMatrix = glMatrix.mat4.create();
 
-      viewMatrix = glMatrix.mat4.rotate(viewMatrix, rotateMatrix, 0, [0, 0.3, 1]);
+      modelMatrix = glMatrix.mat4.rotate(viewMatrix, rotateMatrix, deg, [0, 0, 1]);
       gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix);
+
+      gl.clear(gl.COlOR_BUFFER_BIT);
 
       gl.drawArrays(gl.TRIANGLES, 0, 9)
     }
 
     draw()
 
+    function handleKeyDown(evt) {
+      if (evt.keyCode == 39) {   //按下右键
+        eyeMat3[0] += 0.01;
+      } else if (evt.keyCode == 37) { //按下左键
+        eyeMat3[0] -= 0.01;
+      } else {
+        return;
+      }
+      draw();
+    }
+
+
+    function rotate() {
+      deg+= 0.01
+      requestAnimationFrame(rotate);
+      draw();
+    }
+
+    rotate(); 
+
+
+    document.addEventListener("keydown", handleKeyDown)
 
 
     function initShader(gl, vertexSource, fragmentSource) {

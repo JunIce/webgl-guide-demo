@@ -21,6 +21,7 @@
 
     void main(){
       gl_Position = u_ViewMatrix * a_Position;
+      gl_PointSize = 10.0;
       v_Color = a_Color;
     }
   </script>
@@ -50,26 +51,16 @@
 
     let n = 4
     let data = new Float32Array([
-      // 0.0, 0.5, -0.4, 0.4, 1.0, 0.4, // 绿色
-      // -0.5, -0.5, -0.4, 0.4, 1, 0.4,
-      // 0.5, -0.5, -0.4, 1.0, 0.4, 0.4,
-
-      // 0.5, 0.4, -0.2, 1, 0.4, 0.4, // 红色
-      // -0.5, 0.4, -0.2, 1.0, 1, 0.4,
-      // 0.0, -0.6, -0.2, 1.0, 1.0, 0.4,
-
-      // 0.0, 0.5, 0, 0.4, 0.4, 1.0,  // 蓝色
-      // -0.5, -0.5, 0.0, 0.4, 0.4, 1.0,
-      // 0.5, -0.5, 0.0, 1.0, 0.4, 0.4,
-
       //顶点坐标和颜色
-      0.0, 0.5, -0.4, 0.4, 1.0, 0.4,//绿色三角形在最后面
+      0.0, 0.5, -0.4, 0.4, 1.0, 0.4, // The back green one
       -0.5, -0.5, -0.4, 0.4, 1.0, 0.4,
       0.5, -0.5, -0.4, 1.0, 0.4, 0.4,
-      0.5, 0.4, -0.2, 1.0, 0.4, 0.4,//黄色三角形在中间
+
+      0.5, 0.4, -0.2, 1.0, 0.4, 0.4, // The middle yellow one
       -0.5, 0.4, -0.2, 1.0, 1.0, 0.4,
       0.0, -0.6, -0.2, 1.0, 1.0, 0.4,
-      0.0, 0.5, 0.0, 0.4, 0.4, 1.0,//蓝色三角形在最前面
+
+      0.0, 0.5, 0.0, 0.4, 0.4, 1.0,  // The front blue one
       -0.5, -0.5, 0.0, 0.4, 0.4, 1.0,
       0.5, -0.5, 0.0, 1.0, 0.4, 0.4
     ]);
@@ -81,13 +72,13 @@
     gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
 
     let a_Position = gl.getAttribLocation(gl.program, "a_Position");
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false,
-      FSIZE * 9, 0
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false,
+      FSIZE * 6, 0
     )
     gl.enableVertexAttribArray(a_Position);
 
     let a_Color = gl.getAttribLocation(gl.program, "a_Color");
-    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 9, FSIZE * 3)
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3)
     gl.enableVertexAttribArray(a_Color);
 
 
