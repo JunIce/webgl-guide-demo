@@ -1,5 +1,9 @@
 # WebGL programming guide
 
+library
+
+> glMatirx
+
 ## webgl programming guide lesson demo
 
 webgl 编程指南 课程 Demo
@@ -20,6 +24,7 @@ webgl 编程指南 课程 Demo
 - [Texture](./13-texture/) 
 - [MultiTexture](./14-multi-texture/)
 - [viewMatrix](./15-viewMatrix/)
+- [viewRotateMatrixWithKeyBoard](./16-viewRotateMatrixWithKeyBoard)
 
 
 ## Reference
