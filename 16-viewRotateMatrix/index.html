@@ -93,7 +93,7 @@
       let modelMatrix = glMatrix.mat4.create();
       let rotateMatrix = glMatrix.mat4.create();
 
-      viewMatrix = glMatrix.mat4.rotate(viewMatrix, rotateMatrix, -19, [0, 0, 1],);
+      viewMatrix = glMatrix.mat4.rotate(viewMatrix, rotateMatrix, 0, [0, 0.3, 1]);
       gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix);
 
       gl.drawArrays(gl.TRIANGLES, 0, 9)
